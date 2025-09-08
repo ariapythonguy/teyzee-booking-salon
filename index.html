@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M87JL688');</script>
+    <!-- End Google Tag Manager -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">IsBeautiful Cosmetics Webstore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            min-height: 100vh;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+      
+        .container {
+    flex: 1;                /* fill remaining height inside body */
+    display: flex;          /* allow internal flex layout */
+    flex-direction: column; /* arrange children vertically */
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    min-height: 100dvh;     /* full screen height on mobile */
+}
+
+/* 
+        .container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        } */
+
+        /* Header Styles */
+        .restaurant-info {
+            position: sticky;
+            top: 0;
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 10px;
+            z-index: 1000;
+            border-bottom: 2px solid #333;
+        }
+
+        .restaurant-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .restaurant-details {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Menu Section Styles */
+        .menu-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            padding-top: 10px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #000000;
+            text-transform: uppercase;
+        }
+
+        /* Dish Styles */
+        .dish {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .dish:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .dish-type {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .veg-indicator {
+            color: #28a745;
+            margin-right: 8px;
+        }
+
+        .nonveg-indicator {
+            color: #dc3545;
+            margin-right: 8px;
+        }
+
+        .dish-type-text {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .dish-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .dish-details {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .dish-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+
+        .dish-pricing {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dish-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #000000;
+            margin-right: 10px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #666666;
+            font-size: 0.9rem;
+            margin-right: 8px;
+        }
+
+        .offer {
+            background-color: #ff6b35;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .dish-rating {
+            color: #ffc107;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .dish-description {
+            font-size: 0.9rem;
+            color: #333333;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .dish-image {
+            width: 120px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .dish-image.loaded {
+            opacity: 1;
+        }
+
+        /* Button Styles */
+        .dish-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .order-btn {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .order-btn:hover {
+            background-color: #333333;
+        }
+
+        .order-btn:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
+
+        .dish-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .counter-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .count {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Footer Styles */
+        .footer {
+            position: sticky;
+            bottom: 0;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .footer-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .footer-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .footer-text a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Read More/Less Functionality */
+        .read-more, .read-less {
+            color: #007bff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .read-more:hover, .read-less:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.1rem;
+            color: #666666;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .container {
+                margin: 0;
+                border: none;
+            }
+
+            .restaurant-name {
+                font-size: 1.5rem;
+            }
+
+            .dish-content {
+                flex-direction: column;
+            }
+
+            .dish-image {
+                width: 100%;
+                max-width: 200px;
+                height: 150px;
+                margin-top: 10px;
+                align-self: center;
+            }
+
+            .dish-details {
+                margin-right: 0;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .footer-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            position: sticky;
+            top: 70px;
+            background-color: #000000;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 999;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .category-nav button {
+            padding: 8px 16px;
+            border: none;
+            background-color: black;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: background 0.3s ease;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .category-nav button:hover,
+        .category-nav button.active {
+            background-color: gray;
+        }
+        /* Floating Cart */
+        .floating-cart {
+            position: relative;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 600px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            z-index: 2000;
+        }
+
+        .floating-cart.hidden {
+            display: none;
+        }
+
+        .cart-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .checkout-btn {
+            background: #fff;
+            color: #000;
+            padding: 6px 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M87JL688"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="container">
+        <!-- Restaurant Header -->
+        <header class="restaurant-info">
+            <h1 class="restaurant-name">Loading...</h1>
+            <p class="restaurant-details">Loading...</p>
+        </header>
+
+        <!-- Navigation Menu -->
+        <nav class="category-nav" id="category-nav">
+            <!-- Categories will be populated dynamically -->
+        </nav>
+
+        <!-- Menu Sections -->
+        <div id="menu-content">
+            <div class="loading">Loading menu...</div>
+        </div>
+        
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <!-- Floating Cart -->
+            <div id="floating-cart" class="floating-cart hidden">
+            <div class="cart-content">
+                <span id="cart-summary">0 items | ₹0</span>
+                <button class="checkout-btn" onclick="showOnlyFlaggedDishes()">View Cart</button>
+            </div>
+            </div>
+       
+            <div class="footer-container" id="footer-main">
+                <!--START - ADDED 2 hidden buttons for booking integraton -->
+                 <!--<button class="footer-btn" onclick="window.location.href='salon-booking.html'">
+        <i class="fas fa-cut"></i> Book Salon
+    </button>
+    <button class="footer-btn" onclick="window.location.href='hotel-booking.html'">
+        <i class="fas fa-bed"></i> Book Hotel
+    </button>-->
+                    <!--END - ADDED 2 hidden buttons for booking integraton -->
+                    <button class="footer-btn" onclick="window.location.href='booking.html'" aria-label="Book Appointment">
+    <i class="fas fa-calendar"></i> Book Now
+</button>
+
+                <button class="footer-btn" onclick="shareOnWhatsApp()" aria-label="Send Order on WhatsApp">
+                    <i class="fab fa-whatsapp"></i> Send Order
+                </button>
+<!--                 <button class="footer-btn" onclick="sendLocationOnWhatsApp()" aria-label="Share Location">
+                    <i class="fas fa-map-marker-alt"></i> Send Location
+                </button> -->
+                <button class="footer-btn"  id="call-btn" onclick="callUs();" aria-label="Call Restaurant">
+                    <i class="fas fa-phone"></i> Call Us
+                </button>
+            </div>
+            <div class="footer-text">
+                Powered by <a href="https://teyzee.site" target="_blank">Teyzee Storefront (https://teyzee.site)</a>
+            </div>
+        </footer>
+        
+    </div>
+
+    <script>
+        // Global variables
+        let selectedDishes = {};
+        let storeData = {};
+
+        // Helper function to slugify strings
+        function slugify(text) {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start of text
+                .replace(/-+$/, '');            // Trim - from end of text
+        }
+
+        // Initialize the application
+        document.addEventListener("DOMContentLoaded", function() {
+            loadData();
+        });
+
+        // Load all data
+        async function loadData() {
+            try {
+                // Load store data
+                const storeResponse = await fetch("store.json");
+                storeData = await storeResponse.json();
+                 // Add flag variable to each item and a unique ID
+                 if (Array.isArray(storeData.items)) {
+                    storeData.items.forEach(item => {
+                        item.flag = false; // Add your default flag value here
+                        item.id = slugify(item.name); // Generate ID for each item
+                    });
+                }
+                updateHeader();
+                createCategoryNavigation();
+                renderMenu();
+
+            } catch (error) {
+                console.error("Error loading data:", error);
+                document.getElementById("menu-content").innerHTML = 
+                    '<div class="loading">Error loading menu. Please try again.</div>';
+            }
+        }
+
+        // Create category navigation
+        function createCategoryNavigation() {
+            const items = storeData.items || [];
+            const categories = [...new Set(items.map(item => item.category))].filter(Boolean);
+            
+            const categoryNav = document.getElementById("category-nav");
+            if (!categoryNav || categories.length === 0) return;
+
+            let navHTML = '';
+            navHTML += `<button onclick="filterByCategory('all')" class="active">Show All</button>`;
+            categories.forEach(category => {
+                navHTML += `<button onclick="filterByCategory('${category}')">${category}</button>`;
+            });
+
+            categoryNav.innerHTML = navHTML;
+        }
+
+        // Update header information
+        function updateHeader() {
+            const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+            document.querySelector(".restaurant-name").textContent = header.storeName || "Restaurant";
+            document.querySelector(".restaurant-details").textContent = 
+                `${header.address || ""} | ${header.contact || ""}`.replace(/^\s*\|\s*|\s*\|\s*$/g, '');
+            document.getElementById("page-title").textContent = `${header.storeName || "Restaurant"} Menu`;
+            
+            // Update call button
+            const callBtn = document.getElementById("call-btn");
+            if (header.contact) {
+               callBtn.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
+            }
+        }
+
+        // Render the menu
+        function renderMenu() {
+            const menuContent = document.getElementById("menu-content");
+            const items = storeData.items || [];
+            
+            if (items.length === 0) {
+                menuContent.innerHTML = '<div class="loading">No menu items available.</div>';
+                return;
+            }
+
+            // Group items by main category (not veg/non-veg)
+            const categories = {};
+            items.forEach(item => {
+                const category = item.category || 'Other';
+                if (!categories[category]) {
+                    categories[category] = [];
+                }
+                categories[category].push(item);
+            });
+
+            // Render categories
+            let html = '';
+            Object.entries(categories).forEach(([category, items]) => {
+                html += `
+                    <section class="menu-section">
+                        <h2 class="section-title">${category}</h2>
+                        <div class="menu-items">
+                            ${items.map(item => renderDishItem(item)).join('')}
+                        </div>
+                    </section>
+                `;
+            });
+
+            menuContent.innerHTML = html;
+            
+            // Initialize lazy loading and other features
+            lazyLoadImages();
+            handleReadMore();
+            checkAvailability();
+        }
+
+        // Render individual dish item
+        function renderDishItem(dish) {
+            const isonsale = dish.onsale === true;
+            const stars = generateStars(dish.rating || 0);
+            const currentHour = new Date().getHours();
+            const isAvailable = currentHour >= (dish.startTime || 0) && currentHour < (dish.endTime || 24);
+            
+            let shortDesc = dish.description && dish.description.length > 50 ? 
+                dish.description.substring(0, 50) + "..." : dish.description || "";
+            let fullDesc = dish.description || "";
+
+            return `
+        <div class="dish">
+            <div class="dish-content">
+                <div class="dish-details">
+                    <h3 class="dish-name">
+                        <a href="product.html?id=${dish.id}">${dish.name || 'Unknown Dish'}</a>
+                    </h3>
+                    <div class="dish-pricing">
+                        <span class="dish-price">₹${dish.price || 0}</span>
+                        ${dish.price ? `<span class="original-price">₹${Math.floor(dish.price * (1 + ((typeof dish.offer === 'number' && dish.offer >= 1 && dish.offer <= 99 ? dish.offer : 1) / 100)))}</span>` : ''}
+                        <span class="offer">${dish.offer}% OFF</span>
+                    </div>
+                    ${stars ? `<div class="dish-rating">${stars} (${dish.rating})</div>` : ''}
+                    <p class="dish-description" 
+                        data-full="${fullDesc}" 
+                        data-short="${shortDesc}">
+                        ${window.innerWidth < 480 && fullDesc.length > 50 ? 
+                            shortDesc + ' <span class="read-more">Read More</span>' : fullDesc}
+                    </p>
+                    ${dish.subcategory ? `<div class="dish-subcategory">${dish.subcategory}</div>` : ''}
+                </div>
+                ${dish["image-1"] ? `<img class="dish-image lazy-img" data-src="${dish["image-1"]}" alt="${dish.name}">` : ''}
+            </div>
+            <div class="dish-footer">
+                ${
+                    (typeof dish.dyn_inv === "number" && dish.dyn_inv < 1)
+                    ? `<button class="order-btn" disabled>Available Soon</button>`
+                    : `<button class="order-btn" onclick="selectDish('${dish.name} - ₹${dish.price}', this)" ${isAvailable ? '' : 'disabled'}>${isAvailable ? 'Add to Order' : 'Available Soon'}</button>`
+                }
+            </div>
+        </div>
+    `;
+        }
+
+        // Generate star rating HTML
+        function generateStars(rating) {
+            if (!rating) return '';
+            
+            let fullStars = Math.floor(rating);
+            let halfStar = rating % 1 !== 0;
+            let starHTML = "";
+            
+            for (let i = 0; i < fullStars; i++) {
+                starHTML += '<i class="fa fa-star"></i> ';
+            }
+            if (halfStar) {
+                starHTML += '<i class="fa fa-star-half"></i> ';
+            }
+            return starHTML;
+        }
+
+        // Lazy load images
+        function lazyLoadImages() {
+            const lazyImages = document.querySelectorAll(".lazy-img");
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.add("loaded");
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            lazyImages.forEach(img => observer.observe(img));
+        }
+
+        // Handle read more/less functionality
+        function handleReadMore() {
+            if (window.innerWidth >= 480) return;
+
+            document.querySelectorAll(".dish-description").forEach(desc => {
+                let shortText = desc.getAttribute("data-short");
+                let fullText = desc.getAttribute("data-full");
+
+                if (fullText.length <= 50) return;
+
+                desc.innerHTML = shortText + ' <span class="read-more">Read More</span>';
+
+                desc.addEventListener("click", function(event) {
+                    if (event.target.classList.contains("read-more")) {
+                        desc.innerHTML = fullText + ' <span class="read-less">Read Less</span>';
+                    } else if (event.target.classList.contains("read-less")) {
+                        desc.innerHTML = shortText + ' <span class="read-more">Read More</span>';
+                    }
+                });
+            });
+        }
+
+        // Check availability based on time
+        function checkAvailability() {
+            const currentHour = new Date().getHours();
+            const buttons = document.querySelectorAll(".order-btn");
+
+            // Restaurant closed hours (1 AM to 7 AM)
+            if (currentHour >= 1 && currentHour < 7) {
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    button.textContent = "Orders Closed";
+                });
+            }
+        }
+        //View Cart functionality
+        function showOnlyFlaggedDishes() {
+    // Loop through all dish elements
+    document.querySelectorAll('.dish').forEach(dishDiv => {
+        const nameElem = dishDiv.querySelector('.dish-name a'); // Adjusted selector for the link
+        const priceElem = dishDiv.querySelector('.dish-price');
+        if (!nameElem || !priceElem) return;
+
+        const dishName = nameElem.textContent.trim();
+        const dishPrice = priceElem.textContent.replace(/[^\d]/g, '');
+        // Find the corresponding item in storeData
+        const item = (storeData.items || []).find(
+            i => i.name === dishName && String(i.price) === dishPrice
+        );
+        // Show if flag is true, hide otherwise
+        dishDiv.style.display = (item && item.flag) ? '' : 'none';
+    });
+    // Hide menu sections (and their titles) if all dishes inside are hidden
+    document.querySelectorAll('.menu-section').forEach(section => {
+        const visibleDishes = section.querySelectorAll('.dish:not([style*="display: none"])');
+        section.style.display = visibleDishes.length > 0 ? '' : 'none';
+    });
+    // Optionally hide the floating cart if nothing is visible
+    const anyVisible = document.querySelectorAll('.dish:not([style*="display: none"])').length > 0;
+    const cart = document.getElementById("floating-cart");
+    if (cart) {
+        cart.classList.toggle("hidden", !anyVisible);
+    }
+}
+
+        // Select dish and show counter
+        function selectDish(dishName, buttonElement) {
+    if (!selectedDishes[dishName]) {
+        selectedDishes[dishName] = 1;
+        // Set flag to true for the selected item
+        let dishObj = null;
+        if (Array.isArray(storeData.items)) {
+            dishObj = storeData.items.find(
+                i => `${i.name} - ₹${i.price}` === dishName
+            );
+            if (dishObj) dishObj.flag = true;
+        }
+        toggleCounter(buttonElement, dishName, dishObj); // <-- pass dishObj here!
+    }
+    updateCartUI();
+}
+
+        // Toggle counter display
+        function toggleCounter(buttonElement, dishName, dishObj) {
+            const maxQty = (dishObj && typeof dishObj.dyn_inv === "number") ? dishObj.dyn_inv : 99;
+            const currentQty = selectedDishes[dishName] || 1;
+            const plusDisabled = currentQty >= maxQty ? 'disabled' : '';
+                
+            const wrapper = document.createElement("div");
+            wrapper.className = "dish-counter";
+            wrapper.innerHTML = `
+                <button class="counter-btn" onclick="updateCount('${dishName}', -1, this)">-</button>
+                <span class="count">${currentQty}</span>
+                <button class="counter-btn" onclick="updateCount('${dishName}', 1, this)" ${plusDisabled}>+</button>
+            `;
+                
+            buttonElement.style.display = "none";
+            buttonElement.parentNode.appendChild(wrapper);
+        }
+
+        // Update item count
+        function updateCount(dishName, change, buttonElement) {
+            // Find the dish object
+            const [name, pricePart] = dishName.split(' - ₹');
+            const item = Array.isArray(storeData.items)
+                ? storeData.items.find(i => i.name === name && String(i.price) === pricePart)
+                : null;
+            const maxQty = (item && typeof item.dyn_inv === "number") ? item.dyn_inv : 99;
+
+            let newQty = (selectedDishes[dishName] || 0) + change;
+            if (newQty > maxQty) newQty = maxQty;
+            if (newQty <= 0) {
+                delete selectedDishes[dishName];
+                if (item) item.flag = false;
+                const counterElement = buttonElement.parentNode;
+                const addButton = counterElement.parentNode.querySelector(".order-btn");
+                counterElement.remove();
+                addButton.style.display = "inline-block";
+            } else {
+                selectedDishes[dishName] = newQty;
+                buttonElement.parentNode.querySelector(".count").textContent = newQty;
+
+                // Disable/enable "+" button as needed
+                const plusBtn = buttonElement.parentNode.querySelectorAll(".counter-btn")[1];
+                if (plusBtn) {
+                    plusBtn.disabled = newQty >= maxQty;
+                }
+            }
+            updateCartUI();
+        }   
+
+        //Floating Cart
+function updateCartUI() {
+    const cart = document.getElementById("floating-cart");
+    const summary = document.getElementById("cart-summary");
+
+    const totalItems = Object.values(selectedDishes).reduce((a, b) => a + b, 0);
+    const totalPrice = calculateTotal();
+
+    if (totalItems > 0) {
+        summary.textContent = `${totalItems} item${totalItems > 1 ? 's' : ''} | ₹${totalPrice}`;
+        cart.classList.remove("hidden");
+    } else {
+        cart.classList.add("hidden");
+    }
+}
+        // Calculate total price
+        function calculateTotal() {
+            let total = 0;
+            Object.entries(selectedDishes).forEach(([dish, quantity]) => {
+                const price = parseFloat(dish.match(/₹(\d+)/)?.[1] || 0);
+                total += price * quantity;
+            });
+            return total;
+        }
+
+        // Share order on WhatsApp
+        function shareOnWhatsApp() {
+            if (Object.keys(selectedDishes).length === 0) {
+                alert("Please select at least one item.");
+                return;
+            }
+            const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+            if (!header.whatsappNumber) {
+                alert("WhatsApp number not found. Please try again later.");
+                return;
+            }
+
+            let orderSummary = Object.entries(selectedDishes)
+                .map(([dish, quantity], index) => `${index + 1}. ${dish} - Qty: ${quantity}`)
+                .join("\n");
+
+            let orderTotal = calculateTotal();
+            const upiId =  header.upi_id || '';
+            const upiLink = `upi://pay?pa=${upiId}&am=${orderTotal}&cu=INR`;
+            
+            const whatsappMessage = `Order Details:\n ${orderSummary} \n \n Total: ₹${orderTotal} \n \n Pay via UPI: ${upiLink}`;
+            const whatsappURL = `https://wa.me/${header.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+            
+            window.open(whatsappURL, "_blank");
+        }
+
+        // Share location on WhatsApp
+         function sendLocationOnWhatsApp() {
+            const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+            if (!header.whatsappNumber) {
+                alert("WhatsApp number not found. Please try again later.");
+                return;
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const locationURL = `https://maps.google.com/?q=${latitude},${longitude}`;
+                    const whatsappMessage = `This is my current location: ${locationURL}`;
+                    const whatsappURL = `https://wa.me/${header.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                    
+                    window.open(whatsappURL, '_blank');
+                }, function(error) {
+                    alert("Unable to retrieve your location. Please enable location access.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        } 
+
+        // Filter by category
+        function filterByCategory(selectedCategory) {
+            // Update active button
+            document.querySelectorAll('.category-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide menu sections
+            const menuSections = document.querySelectorAll('.menu-section');
+            menuSections.forEach(section => {
+                if (selectedCategory === 'all') {
+                    section.style.display = 'block';
+                } else {
+                    const sectionTitle = section.querySelector('.section-title').textContent;
+                    section.style.display = sectionTitle === selectedCategory ? 'block' : 'none';
+                }
+            });
+             if (selectedCategory === 'all') {
+    // Show all dish divs
+    document.querySelectorAll('.dish').forEach(dishDiv => {
+        dishDiv.style.display = '';
+    });
+    // Set flags based on cart
+    if (Array.isArray(storeData.items)) {
+        storeData.items.forEach(item => {
+            // Compose the dish key as used in selectedDishes
+            const dishKey = `${item.name} - ₹${item.price}`;
+            item.flag = !!selectedDishes[dishKey];
+        });
+    }
+    // Optionally, show the floating cart if there are items
+    updateCartUI();
+}
+
+        }
+        //Function for call us button
+        function callUs() {
+        const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+        if (header.contact) {
+        window.location.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
+        } else {
+            alert("Phone number not available.");
+        }
+}
+
+        // Handle window resize
+        window.addEventListener("resize", function() {
+            handleReadMore();
+        });
+        
+    </script>
+    <script src="./menu.js"></script>
+</body>
+
+</html>

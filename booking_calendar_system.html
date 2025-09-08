@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #f8f8f8;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .booking-type-selector {
+            padding: 20px;
+            background: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .booking-type-btn {
+            padding: 12px 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .booking-type-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .booking-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .calendar-section {
+            background: var(--secondary-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-month {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .calendar-day:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .calendar-day.disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .calendar-day.range-start,
+        .calendar-day.range-end {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .calendar-day.in-range {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-color);
+        }
+
+        .booking-form {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .time-slot {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-color);
+        }
+
+        .time-slot.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .time-slot.disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .services-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .service-item.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .service-details {
+            flex-grow: 1;
+        }
+
+        .service-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .service-duration {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .service-price {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .booking-summary {
+            background: var(--secondary-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .booking-summary h3 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .summary-item:last-child {
+            font-weight: 600;
+            font-size: 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+            margin-top: 10px;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background: #218838;
+        }
+
+        .book-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--secondary-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--error-color);
+        }
+
+        @media (max-width: 768px) {
+            .booking-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .calendar-grid {
+                gap: 3px;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .booking-type-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .google-cal-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .google-cal-info i {
+            color: #2196f3;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Book Your Appointment</h1>
+            <p>Choose your service and preferred time</p>
+        </div>
+
+        <div class="booking-type-selector">
+            <button class="booking-type-btn active" onclick="switchBookingType('salon')">
+                <i class="fas fa-cut"></i> Salon Appointment
+            </button>
+            <button class="booking-type-btn" onclick="switchBookingType('hotel')">
+                <i class="fas fa-bed"></i> Hotel Booking
+            </button>
+        </div>
+
+        <div class="booking-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button class="nav-btn" onclick="changeMonth(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="calendar-month" id="calendar-month"></span>
+                        <button class="nav-btn" onclick="changeMonth(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="booking-form">
+                <div class="google-cal-info">
+                    <i class="fab fa-google"></i>
+                    Your booking will be automatically synced to Google Calendar
+                </div>
+
+                <div class="form-group" id="service-selection">
+                    <label class="form-label">Select Service</label>
+                    <div class="services-list" id="services-list">
+                        <!-- Services will be populated based on booking type -->
+                    </div>
+                </div>
+
+                <div class="form-group" id="time-selection" style="display: none;">
+                    <label class="form-label">Available Times</label>
+                    <div class="time-slots" id="time-slots">
+                        <!-- Time slots will be populated -->
+                    </div>
+                </div>
+
+                <div class="form-group" id="guest-info" style="display: none;">
+                    <label class="form-label">Number of Guests</label>
+                    <select class="form-select" id="guests">
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Guests</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" id="customer-name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" id="customer-phone" placeholder="Enter your phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="customer-email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Special Requests</label>
+                    <textarea class="form-textarea" id="special-requests" rows="3" placeholder="Any special requirements or notes..."></textarea>
+                </div>
+
+                <div class="booking-summary" id="booking-summary" style="display: none;">
+                    <h3>Booking Summary</h3>
+                    <div id="summary-details">
+                        <!-- Summary will be populated -->
+                    </div>
+                </div>
+
+                <button class="book-btn" id="book-btn" onclick="processBooking()" disabled>
+                    Complete Booking
+                </button>
+
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Store
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentBookingType = 'salon';
+        let currentDate = new Date();
+        let selectedDate = null;
+        let selectedService = null;
+        let selectedTime = null;
+        let checkInDate = null;
+        let checkOutDate = null;
+        let storeData = {};
+
+        // Services data
+        const serviceData = {
+            salon: [
+                { id: 1, name: 'Haircut & Style', duration: 60, price: 1200 },
+                { id: 2, name: 'Hair Color', duration: 120, price: 2500 },
+                { id: 3, name: 'Facial Treatment', duration: 90, price: 1800 },
+                { id: 4, name: 'Manicure', duration: 45, price: 800 },
+                { id: 5, name: 'Pedicure', duration: 60, price: 1000 },
+                { id: 6, name: 'Hair Spa', duration: 90, price: 1500 },
+                { id: 7, name: 'Eyebrow Threading', duration: 30, price: 300 },
+                { id: 8, name: 'Full Body Massage', duration: 120, price: 3000 }
+            ],
+            hotel: [
+                { id: 1, name: 'Standard Room', price: 2500 },
+                { id: 2, name: 'Deluxe Room', price: 3500 },
+                { id: 3, name: 'Suite', price: 5000 },
+                { id: 4, name: 'Family Room', price: 4000 },
+                { id: 5, name: 'Presidential Suite', price: 8000 }
+            ]
+        };
+
+        // Time slots for salon appointments
+        const timeSlots = [
+            '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+            '12:00', '12:30', '14:00', '14:30', '15:00', '15:30',
+            '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+        ];
+
+        // Initialize the booking system
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStoreData();
+            generateCalendar();
+            populateServices();
+        });
+
+        // Load store data
+        async function loadStoreData() {
+            try {
+                const response = await fetch('store.json');
+                storeData = await response.json();
+            } catch (error) {
+                console.error('Error loading store data:', error);
+            }
+        }
+
+        // Switch between booking types
+        function switchBookingType(type) {
+            currentBookingType = type;
+            
+            // Update active button
+            document.querySelectorAll('.booking-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Reset selections
+            selectedDate = null;
+            selectedService = null;
+            selectedTime = null;
+            checkInDate = null;
+            checkOutDate = null;
+
+            // Update UI
+            populateServices();
+            updateTimeSelection();
+            updateGuestInfo();
+            updateBookingSummary();
+            generateCalendar();
+        }
+
+        // Generate calendar
+        function generateCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const monthElement = document.getElementById('calendar-month');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            monthElement.textContent = currentDate.toLocaleDateString('en-US', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            grid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day-header';
+                dayElement.textContent = day;
+                grid.appendChild(dayElement);
+            });
+
+            // Add calendar days
+            const today = new Date();
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = date.getDate();
+                
+                // Disable past dates
+                if (date < today.setHours(0, 0, 0, 0)) {
+                    dayElement.classList.add('disabled');
+                } else {
+                    dayElement.onclick = () => selectDate(date);
+                }
+                
+                // Highlight current month
+                if (date.getMonth() !== month) {
+                    dayElement.style.opacity = '0.3';
+                }
+                
+                // Mark selected dates
+                if (currentBookingType === 'hotel') {
+                    if (checkInDate && date.toDateString() === checkInDate.toDateString()) {
+                        dayElement.classList.add('range-start');
+                    }
+                    if (checkOutDate && date.toDateString() === checkOutDate.toDateString()) {
+                        dayElement.classList.add('range-end');
+                    }
+                    if (checkInDate && checkOutDate && date > checkInDate && date < checkOutDate) {
+                        dayElement.classList.add('in-range');
+                    }
+                } else {
+                    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+                        dayElement.classList.add('selected');
+                    }
+                }
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // Select date
+        function selectDate(date) {
+            if (currentBookingType === 'salon') {
+                selectedDate = date;
+                updateTimeSelection();
+            } else {
+                // Hotel booking - handle check-in/check-out dates
+                if (!checkInDate || (checkInDate && checkOutDate)) {
+                    checkInDate = date;
+                    checkOutDate = null;
+                } else if (date > checkInDate) {
+                    checkOutDate = date;
+                } else {
+                    checkInDate = date;
+                    checkOutDate = null;
+                }
+            }
+            
+            generateCalendar();
+            updateBookingSummary();
+        }
+
+        // Change month
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            generateCalendar();
+        }
+
+        // Populate services based on booking type
+        function populateServices() {
+            const servicesList = document.getElementById('services-list');
+            const services = serviceData[currentBookingType];
+            
+            servicesList.innerHTML = '';
+            services.forEach(service => {
+                const serviceElement = document.createElement('div');
+                serviceElement.className = 'service-item';
+                serviceElement.onclick = () => selectService(service);
+                
+                serviceElement.innerHTML = `
+                    <div class="service-details">
+                        <div class="service-name">${service.name}</div>
+                        ${service.duration ? `<div class="service-duration">${service.duration} min</div>` : ''}
+                    </div>
+                    <div class="service-price">₹${service.price}</div>
+                `;
+                
+                servicesList.appendChild(serviceElement);
+            });
+        }
+
+        // Select service
+        function selectService(service) {
+            selectedService = service;
+            
+            // Update UI
+            document.querySelectorAll('.service-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.target.closest('.service-item').classList.add('selected');
+            
+            updateTimeSelection();
+            updateBookingSummary();
+        }
+
+        // Update time selection visibility
+        function updateTimeSelection() {
+            const timeSelection = document.getElementById('time-selection');
+            
+            if (currentBookingType === 'salon' && selectedDate && selectedService) {
+                timeSelection.style.display = 'block';
+                populateTimeSlots();
+            } else {
+                timeSelection.style.display = 'none';
+            }
+        }
+
+        // Populate time slots
+        function populateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('time-slots');
+            timeSlotsContainer.innerHTML = '';
+            
+            timeSlots.forEach(time => {
+                const timeElement = document.createElement('div');
+                timeElement.className = 'time-slot';
+                timeElement.textContent = time;
+                timeElement.onclick = () => selectTime(time);
+                
+                // Simulate some booked slots (you can integrate with real data)
+                if (Math.random() < 0.2) {
+                    timeElement.classList.add('disabled');
+                    timeElement.onclick = null;
+                }
+                
+                timeSlotsContainer.appendChild(timeElement);
+            });
+        }
+
+        // Select time
+        function selectTime(time) {
+            selectedTime = time;
+            
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            updateBookingSummary();
+        }
+
+        // Update guest info visibility
+        function updateGuestInfo() {
+            const guestInfo = document.getElementById('guest-info');
+            guestInfo.style.display = currentBookingType === 'hotel' ? 'block' : 'none';
+        }
+
+        // Update booking summary
+        function updateBookingSummary() {
+            const summary = document.getElementById('booking-summary');
+            const summaryDetails = document.getElementById('summary-details');
+            const bookBtn = document.getElementById('book-btn');
+            
+            let canBook = false;
+            let summaryHTML = '';
+            
+            if (currentBookingType === 'salon') {
+                if (selectedDate && selectedService && selectedTime) {
+                    canBook = true;
+                    summaryHTML = `
+                        <div class="summary-item">
+                            <span>Service:</span>
+                            <span>${selectedService.name}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date:</span>
+                            <span>${selectedDate.toLocaleDateString()}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time:</span>
+                            <span>${selectedTime}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration:</span>
+                            <span>${selectedService.duration} min</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total:</span>
+                            <span>₹${selectedService.price}</span>
+                        </div>
+                    `;
+                }
+            } else {
+                if (checkInDate && checkOutDate && selectedService) {
+                    canBook = true;
+                    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                    const total = selectedService.price * nights;
+                    
+                    summaryHTML = `
+                        <div class="summary-item">
+                            <span>Room:</span>
+                            <span>${selectedService.name}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Check-in:</span>
+                            <span>${checkInDate.toLocaleDateString()}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Check-out:</span>
+                            <span>${checkOutDate.toLocaleDateString()}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Nights:</span>
+                            <span>${nights}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Rate per night:</span>
+                            <span>₹${selectedService.price}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total:</span>
+                            <span>₹${total}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (canBook) {
+                summary.style.display = 'block';
+                summaryDetails.innerHTML = summaryHTML;
+                bookBtn.disabled = false;
+            } else {
+                summary.style.display = 'none';
+                bookBtn.disabled = true;
+            }
+        }
+
+        // Process booking
+        function processBooking() {
+            const customerName = document.getElementById('customer-name').value;
+            const customerPhone = document.getElementById('customer-phone').value;
+            const customerEmail = document.getElementById('customer-email').value;
+            const specialRequests = document.getElementById('special-requests').value;
+            const guests = document.getElementById('guests').value;
+            
+            if (!customerName || !customerPhone || !customerEmail) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Prepare booking data
+            const bookingData = {
+                type: currentBookingType,
+                service: selectedService,
+                customerName,
+                customerPhone,
+                customerEmail,
+                specialRequests,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (currentBookingType === 'salon') {
+                bookingData.date = selectedDate.toISOString();
+                bookingData.time = selectedTime;
+                bookingData.endTime = calculateEndTime(selectedTime, selectedService.duration);
+            } else {
+                bookingData.checkInDate = checkInDate.toISOString();
+                bookingData.checkOutDate = checkOutDate.toISOString();
+                bookingData.guests = guests;
+                bookingData.nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                bookingData.totalPrice = selectedService.price * bookingData.nights;
+            }
+            
+            // Send booking via WhatsApp and create Google Calendar event
+            sendBookingToWhatsApp(bookingData);
+            createGoogleCalendarEvent(bookingData);
+            
+            showNotification('Booking submitted successfully!', 'success');
+            
+            // Reset form after 2 seconds
+            setTimeout(() => {
+                resetForm();
+            }, 2000);
+        }
+
+        // Calculate end time for salon appointments
+        function calculateEndTime(startTime, duration) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const startDate = new Date();
+            startDate.setHours(hours, minutes, 0, 0);
+            startDate.setMinutes(startDate.getMinutes() + duration);
+            return startDate.toTimeString().slice(0, 5);
+        }
+
+        // Send booking to WhatsApp
+        function sendBookingToWhatsApp(bookingData) {
+            const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+            const whatsappNumber = header.whatsappNumber;
+            
+            if (!whatsappNumber) {
+                showNotification('WhatsApp number not configured', 'error');
+                return;
+            }
+            
+            let message = `🔔 *NEW BOOKING REQUEST*\n\n`;
+            message += `📅 *Type:* ${bookingData.type.charAt(0).toUpperCase() + bookingData.type.slice(1)}\n`;
+            message += `👤 *Customer:* ${bookingData.customerName}\n`;
+            message += `📱 *Phone:* ${bookingData.customerPhone}\n`;
+            message += `📧 *Email:* ${bookingData.customerEmail}\n\n`;
+            
+            if (bookingData.type === 'salon') {
+                message += `💇‍♀️ *Service:* ${bookingData.service.name}\n`;
+                message += `📅 *Date:* ${new Date(bookingData.date).toLocaleDateString()}\n`;
+                message += `🕐 *Time:* ${bookingData.time} - ${bookingData.endTime}\n`;
+                message += `⏰ *Duration:* ${bookingData.service.duration} minutes\n`;
+                message += `💰 *Price:* ₹${bookingData.service.price}\n`;
+            } else {
+                message += `🏨 *Room:* ${bookingData.service.name}\n`;
+                message += `📅 *Check-in:* ${new Date(bookingData.checkInDate).toLocaleDateString()}\n`;
+                message += `📅 *Check-out:* ${new Date(bookingData.checkOutDate).toLocaleDateString()}\n`;
+                message += `🌙 *Nights:* ${bookingData.nights}\n`;
+                message += `👥 *Guests:* ${bookingData.guests}\n`;
+                message += `💰 *Total:* ₹${bookingData.totalPrice}\n`;
+            }
+            
+            if (bookingData.specialRequests) {
+                message += `\n📝 *Special Requests:*\n${bookingData.specialRequests}\n`;
+            }
+            
+            message += `\n⏰ *Booking Time:* ${new Date(bookingData.timestamp).toLocaleString()}`;
+            
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Create Google Calendar event
+        function createGoogleCalendarEvent(bookingData) {
+            let title, startDate, endDate, details;
+            
+            if (bookingData.type === 'salon') {
+                title = `${bookingData.service.name} - ${bookingData.customerName}`;
+                const appointmentDate = new Date(bookingData.date);
+                const [hours, minutes] = bookingData.time.split(':').map(Number);
+                appointmentDate.setHours(hours, minutes, 0, 0);
+                startDate = appointmentDate;
+                
+                endDate = new Date(appointmentDate);
+                endDate.setMinutes(endDate.getMinutes() + bookingData.service.duration);
+                
+                details = `Customer: ${bookingData.customerName}\\n`;
+                details += `Phone: ${bookingData.customerPhone}\\n`;
+                details += `Email: ${bookingData.customerEmail}\\n`;
+                details += `Service: ${bookingData.service.name}\\n`;
+                details += `Duration: ${bookingData.service.duration} minutes\\n`;
+                details += `Price: ₹${bookingData.service.price}\\n`;
+                if (bookingData.specialRequests) {
+                    details += `Special Requests: ${bookingData.specialRequests}\\n`;
+                }
+            } else {
+                title = `Hotel Booking - ${bookingData.service.name} - ${bookingData.customerName}`;
+                startDate = new Date(bookingData.checkInDate);
+                endDate = new Date(bookingData.checkOutDate);
+                
+                details = `Customer: ${bookingData.customerName}\\n`;
+                details += `Phone: ${bookingData.customerPhone}\\n`;
+                details += `Email: ${bookingData.customerEmail}\\n`;
+                details += `Room: ${bookingData.service.name}\\n`;
+                details += `Guests: ${bookingData.guests}\\n`;
+                details += `Nights: ${bookingData.nights}\\n`;
+                details += `Total: ₹${bookingData.totalPrice}\\n`;
+                if (bookingData.specialRequests) {
+                    details += `Special Requests: ${bookingData.specialRequests}\\n`;
+                }
+            }
+            
+            // Format dates for Google Calendar
+            const formatGoogleDate = (date) => {
+                return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            };
+            
+            const googleCalendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${encodeURIComponent(details)}`;
+            
+            // Open Google Calendar in new tab
+            setTimeout(() => {
+                window.open(googleCalendarURL, '_blank');
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Reset form
+        function resetForm() {
+            selectedDate = null;
+            selectedService = null;
+            selectedTime = null;
+            checkInDate = null;
+            checkOutDate = null;
+            
+            document.getElementById('customer-name').value = '';
+            document.getElementById('customer-phone').value = '';
+            document.getElementById('customer-email').value = '';
+            document.getElementById('special-requests').value = '';
+            document.getElementById('guests').value = '1';
+            
+            document.querySelectorAll('.service-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            updateTimeSelection();
+            updateBookingSummary();
+            generateCalendar();
+        }
+
+        // Update guest info when switching booking types
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGuestInfo();
+        });
+    </script>
+</body>
+</html>
