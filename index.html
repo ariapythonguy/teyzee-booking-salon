@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-        <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-M87JL688');</script>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-M87JL688');</script>
     <!-- End Google Tag Manager -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">IsBeautiful Cosmetics Webstore</title>
@@ -28,20 +32,24 @@
             display: flex;
             flex-direction: column;
         }
-      
-        .container {
-    flex: 1;                /* fill remaining height inside body */
-    display: flex;          /* allow internal flex layout */
-    flex-direction: column; /* arrange children vertically */
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    position: relative;
-    min-height: 100dvh;     /* full screen height on mobile */
-}
 
-/* 
+        .container {
+            flex: 1;
+            /* fill remaining height inside body */
+            display: flex;
+            /* allow internal flex layout */
+            flex-direction: column;
+            /* arrange children vertically */
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            min-height: 100dvh;
+            /* full screen height on mobile */
+        }
+
+        /* 
         .container {
             flex: 1;
             max-width: 600px;
@@ -101,7 +109,7 @@
         }
 
         .dish:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .dish-type {
@@ -305,13 +313,15 @@
         }
 
         /* Read More/Less Functionality */
-        .read-more, .read-less {
+        .read-more,
+        .read-less {
             color: #007bff;
             cursor: pointer;
             font-weight: bold;
         }
 
-        .read-more:hover, .read-less:hover {
+        .read-more:hover,
+        .read-less:hover {
             text-decoration: underline;
         }
 
@@ -372,15 +382,22 @@
             background-color: #000000;
             padding: 10px 0;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
+            /* align left for natural scrolling */
             gap: 8px;
             z-index: 999;
-            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
+            /* enable horizontal scroll */
             white-space: nowrap;
+            /* keep items on one line */
+            -webkit-overflow-scrolling: touch;
+            /* smooth scrolling on mobile */
         }
 
         .category-nav button {
+            flex: 0 0 auto;
+            /* prevent buttons from shrinking */
             padding: 8px 16px;
             border: none;
             background-color: black;
@@ -390,6 +407,7 @@
             border-radius: 20px;
             transition: background 0.3s ease;
             white-space: nowrap;
+            /* keep button text on one line */
             min-width: fit-content;
         }
 
@@ -397,6 +415,7 @@
         .category-nav button.active {
             background-color: gray;
         }
+
         /* Floating Cart */
         .floating-cart {
             position: relative;
@@ -412,7 +431,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 2000;
         }
 
@@ -441,8 +460,8 @@
 
 <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M87JL688"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M87JL688" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div class="container">
         <!-- Restaurant Header -->
@@ -460,38 +479,31 @@
         <div id="menu-content">
             <div class="loading">Loading menu...</div>
         </div>
-        
-        
+
+
         <!-- Footer -->
         <footer class="footer">
             <!-- Floating Cart -->
             <div id="floating-cart" class="floating-cart hidden">
-            <div class="cart-content">
-                <span id="cart-summary">0 items | ₹0</span>
-                <button class="checkout-btn" onclick="showOnlyFlaggedDishes()">View Cart</button>
+                <div class="cart-content">
+                    <span id="cart-summary">0 items | ₹0</span>
+                    <button class="checkout-btn" onclick="showOnlyFlaggedDishes()">View Cart</button>
+                </div>
             </div>
-            </div>
-       
-            <div class="footer-container" id="footer-main">
-                <!--START - ADDED 2 hidden buttons for booking integraton -->
-                 <!--<button class="footer-btn" onclick="window.location.href='salon-booking.html'">
-        <i class="fas fa-cut"></i> Book Salon
-    </button>
-    <button class="footer-btn" onclick="window.location.href='hotel-booking.html'">
-        <i class="fas fa-bed"></i> Book Hotel
-    </button>-->
-                    <!--END - ADDED 2 hidden buttons for booking integraton -->
-                    <button class="footer-btn" onclick="window.location.href='booking.html'" aria-label="Book Appointment">
-    <i class="fas fa-calendar"></i> Book Now
-</button>
 
-                <button class="footer-btn" onclick="shareOnWhatsApp()" aria-label="Send Order on WhatsApp">
+            <div class="footer-container" id="footer-main">
+                <!-- <button class="footer-btn" onclick="shareOnWhatsApp()" aria-label="Send Order on WhatsApp">
                     <i class="fab fa-whatsapp"></i> Send Order
+                </button> -->
+                <button class="footer-btn" aria-label="Send Order on WhatsApp">
+                    <a style="color: #000000; text-decoration: none;" href="salon_booking.html"><i
+                            class="fab fa-whatsapp"></i> Send Order</a>
+
                 </button>
-<!--                 <button class="footer-btn" onclick="sendLocationOnWhatsApp()" aria-label="Share Location">
+                <!--                 <button class="footer-btn" onclick="sendLocationOnWhatsApp()" aria-label="Share Location">
                     <i class="fas fa-map-marker-alt"></i> Send Location
                 </button> -->
-                <button class="footer-btn"  id="call-btn" onclick="callUs();" aria-label="Call Restaurant">
+                <button class="footer-btn" id="call-btn" onclick="callUs();" aria-label="Call Restaurant">
                     <i class="fas fa-phone"></i> Call Us
                 </button>
             </div>
@@ -499,7 +511,7 @@
                 Powered by <a href="https://teyzee.site" target="_blank">Teyzee Storefront (https://teyzee.site)</a>
             </div>
         </footer>
-        
+
     </div>
 
     <script>
@@ -518,7 +530,7 @@
         }
 
         // Initialize the application
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             loadData();
         });
 
@@ -528,8 +540,8 @@
                 // Load store data
                 const storeResponse = await fetch("store.json");
                 storeData = await storeResponse.json();
-                 // Add flag variable to each item and a unique ID
-                 if (Array.isArray(storeData.items)) {
+                // Add flag variable to each item and a unique ID
+                if (Array.isArray(storeData.items)) {
                     storeData.items.forEach(item => {
                         item.flag = false; // Add your default flag value here
                         item.id = slugify(item.name); // Generate ID for each item
@@ -541,7 +553,7 @@
 
             } catch (error) {
                 console.error("Error loading data:", error);
-                document.getElementById("menu-content").innerHTML = 
+                document.getElementById("menu-content").innerHTML =
                     '<div class="loading">Error loading menu. Please try again.</div>';
             }
         }
@@ -550,7 +562,7 @@
         function createCategoryNavigation() {
             const items = storeData.items || [];
             const categories = [...new Set(items.map(item => item.category))].filter(Boolean);
-            
+
             const categoryNav = document.getElementById("category-nav");
             if (!categoryNav || categories.length === 0) return;
 
@@ -567,14 +579,14 @@
         function updateHeader() {
             const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
             document.querySelector(".restaurant-name").textContent = header.storeName || "Restaurant";
-            document.querySelector(".restaurant-details").textContent = 
+            document.querySelector(".restaurant-details").textContent =
                 `${header.address || ""} | ${header.contact || ""}`.replace(/^\s*\|\s*|\s*\|\s*$/g, '');
             document.getElementById("page-title").textContent = `${header.storeName || "Restaurant"} Menu`;
-            
+
             // Update call button
             const callBtn = document.getElementById("call-btn");
             if (header.contact) {
-               callBtn.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
+                callBtn.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
             }
         }
 
@@ -582,7 +594,7 @@
         function renderMenu() {
             const menuContent = document.getElementById("menu-content");
             const items = storeData.items || [];
-            
+
             if (items.length === 0) {
                 menuContent.innerHTML = '<div class="loading">No menu items available.</div>';
                 return;
@@ -612,7 +624,7 @@
             });
 
             menuContent.innerHTML = html;
-            
+
             // Initialize lazy loading and other features
             lazyLoadImages();
             handleReadMore();
@@ -625,8 +637,8 @@
             const stars = generateStars(dish.rating || 0);
             const currentHour = new Date().getHours();
             const isAvailable = currentHour >= (dish.startTime || 0) && currentHour < (dish.endTime || 24);
-            
-            let shortDesc = dish.description && dish.description.length > 50 ? 
+
+            let shortDesc = dish.description && dish.description.length > 50 ?
                 dish.description.substring(0, 50) + "..." : dish.description || "";
             let fullDesc = dish.description || "";
 
@@ -646,18 +658,17 @@
                     <p class="dish-description" 
                         data-full="${fullDesc}" 
                         data-short="${shortDesc}">
-                        ${window.innerWidth < 480 && fullDesc.length > 50 ? 
-                            shortDesc + ' <span class="read-more">Read More</span>' : fullDesc}
+                        ${window.innerWidth < 480 && fullDesc.length > 50 ?
+                    shortDesc + ' <span class="read-more">Read More</span>' : fullDesc}
                     </p>
                     ${dish.subcategory ? `<div class="dish-subcategory">${dish.subcategory}</div>` : ''}
                 </div>
                 ${dish["image-1"] ? `<img class="dish-image lazy-img" data-src="${dish["image-1"]}" alt="${dish.name}">` : ''}
             </div>
             <div class="dish-footer">
-                ${
-                    (typeof dish.dyn_inv === "number" && dish.dyn_inv < 1)
+                ${(typeof dish.dyn_inv === "number" && dish.dyn_inv < 1)
                     ? `<button class="order-btn" disabled>Available Soon</button>`
-                    : `<button class="order-btn" onclick="selectDish('${dish.name} - ₹${dish.price}', this)" ${isAvailable ? '' : 'disabled'}>${isAvailable ? 'Add to Order' : 'Available Soon'}</button>`
+                    : `<button class="order-btn" onclick="selectDish('${dish.name} - ₹${dish.price}', this)" ${isAvailable ? '' : 'disabled'}>${isAvailable ? 'Add to Order' : 'Unavailable'}</button>`
                 }
             </div>
         </div>
@@ -667,11 +678,11 @@
         // Generate star rating HTML
         function generateStars(rating) {
             if (!rating) return '';
-            
+
             let fullStars = Math.floor(rating);
             let halfStar = rating % 1 !== 0;
             let starHTML = "";
-            
+
             for (let i = 0; i < fullStars; i++) {
                 starHTML += '<i class="fa fa-star"></i> ';
             }
@@ -684,7 +695,7 @@
         // Lazy load images
         function lazyLoadImages() {
             const lazyImages = document.querySelectorAll(".lazy-img");
-            
+
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -711,7 +722,7 @@
 
                 desc.innerHTML = shortText + ' <span class="read-more">Read More</span>';
 
-                desc.addEventListener("click", function(event) {
+                desc.addEventListener("click", function (event) {
                     if (event.target.classList.contains("read-more")) {
                         desc.innerHTML = fullText + ' <span class="read-less">Read Less</span>';
                     } else if (event.target.classList.contains("read-less")) {
@@ -736,115 +747,60 @@
         }
         //View Cart functionality
         function showOnlyFlaggedDishes() {
-    // Loop through all dish elements
-    document.querySelectorAll('.dish').forEach(dishDiv => {
-        const nameElem = dishDiv.querySelector('.dish-name a'); // Adjusted selector for the link
-        const priceElem = dishDiv.querySelector('.dish-price');
-        if (!nameElem || !priceElem) return;
+            // Loop through all dish elements
+            document.querySelectorAll('.dish').forEach(dishDiv => {
+                const nameElem = dishDiv.querySelector('.dish-name a'); // Adjusted selector for the link
+                const priceElem = dishDiv.querySelector('.dish-price');
+                if (!nameElem || !priceElem) return;
 
-        const dishName = nameElem.textContent.trim();
-        const dishPrice = priceElem.textContent.replace(/[^\d]/g, '');
-        // Find the corresponding item in storeData
-        const item = (storeData.items || []).find(
-            i => i.name === dishName && String(i.price) === dishPrice
-        );
-        // Show if flag is true, hide otherwise
-        dishDiv.style.display = (item && item.flag) ? '' : 'none';
-    });
-    // Hide menu sections (and their titles) if all dishes inside are hidden
-    document.querySelectorAll('.menu-section').forEach(section => {
-        const visibleDishes = section.querySelectorAll('.dish:not([style*="display: none"])');
-        section.style.display = visibleDishes.length > 0 ? '' : 'none';
-    });
-    // Optionally hide the floating cart if nothing is visible
-    const anyVisible = document.querySelectorAll('.dish:not([style*="display: none"])').length > 0;
-    const cart = document.getElementById("floating-cart");
-    if (cart) {
-        cart.classList.toggle("hidden", !anyVisible);
-    }
-}
+                const dishName = nameElem.textContent.trim();
+                const dishPrice = priceElem.textContent.replace(/[^\d]/g, '');
+                // Find the corresponding item in storeData
+                const item = (storeData.items || []).find(
+                    i => i.name === dishName && String(i.price) === dishPrice
+                );
+                // Show if flag is true, hide otherwise
+                dishDiv.style.display = (item && item.flag) ? '' : 'none';
+            });
+            // Hide menu sections (and their titles) if all dishes inside are hidden
+            document.querySelectorAll('.menu-section').forEach(section => {
+                const visibleDishes = section.querySelectorAll('.dish:not([style*="display: none"])');
+                section.style.display = visibleDishes.length > 0 ? '' : 'none';
+            });
+            // Optionally hide the floating cart if nothing is visible
+            const anyVisible = document.querySelectorAll('.dish:not([style*="display: none"])').length > 0;
+            const cart = document.getElementById("floating-cart");
+            if (cart) {
+                cart.classList.toggle("hidden", !anyVisible);
+            }
+        }
 
-        // Select dish and show counter
+        // Select dish and 
         function selectDish(dishName, buttonElement) {
-    if (!selectedDishes[dishName]) {
-        selectedDishes[dishName] = 1;
-        // Set flag to true for the selected item
-        let dishObj = null;
-        if (Array.isArray(storeData.items)) {
-            dishObj = storeData.items.find(
-                i => `${i.name} - ₹${i.price}` === dishName
-            );
-            if (dishObj) dishObj.flag = true;
-        }
-        toggleCounter(buttonElement, dishName, dishObj); // <-- pass dishObj here!
-    }
-    updateCartUI();
-}
-
-        // Toggle counter display
-        function toggleCounter(buttonElement, dishName, dishObj) {
-            const maxQty = (dishObj && typeof dishObj.dyn_inv === "number") ? dishObj.dyn_inv : 99;
-            const currentQty = selectedDishes[dishName] || 1;
-            const plusDisabled = currentQty >= maxQty ? 'disabled' : '';
-                
-            const wrapper = document.createElement("div");
-            wrapper.className = "dish-counter";
-            wrapper.innerHTML = `
-                <button class="counter-btn" onclick="updateCount('${dishName}', -1, this)">-</button>
-                <span class="count">${currentQty}</span>
-                <button class="counter-btn" onclick="updateCount('${dishName}', 1, this)" ${plusDisabled}>+</button>
-            `;
-                
-            buttonElement.style.display = "none";
-            buttonElement.parentNode.appendChild(wrapper);
-        }
-
-        // Update item count
-        function updateCount(dishName, change, buttonElement) {
-            // Find the dish object
-            const [name, pricePart] = dishName.split(' - ₹');
-            const item = Array.isArray(storeData.items)
-                ? storeData.items.find(i => i.name === name && String(i.price) === pricePart)
-                : null;
-            const maxQty = (item && typeof item.dyn_inv === "number") ? item.dyn_inv : 99;
-
-            let newQty = (selectedDishes[dishName] || 0) + change;
-            if (newQty > maxQty) newQty = maxQty;
-            if (newQty <= 0) {
-                delete selectedDishes[dishName];
-                if (item) item.flag = false;
-                const counterElement = buttonElement.parentNode;
-                const addButton = counterElement.parentNode.querySelector(".order-btn");
-                counterElement.remove();
-                addButton.style.display = "inline-block";
-            } else {
-                selectedDishes[dishName] = newQty;
-                buttonElement.parentNode.querySelector(".count").textContent = newQty;
-
-                // Disable/enable "+" button as needed
-                const plusBtn = buttonElement.parentNode.querySelectorAll(".counter-btn")[1];
-                if (plusBtn) {
-                    plusBtn.disabled = newQty >= maxQty;
-                }
+            if (!selectedDishes[dishName]) {
+                selectedDishes[dishName] = 1;
             }
             updateCartUI();
-        }   
+        }
+
+
+        
 
         //Floating Cart
-function updateCartUI() {
-    const cart = document.getElementById("floating-cart");
-    const summary = document.getElementById("cart-summary");
+        function updateCartUI() {
+            const cart = document.getElementById("floating-cart");
+            const summary = document.getElementById("cart-summary");
 
-    const totalItems = Object.values(selectedDishes).reduce((a, b) => a + b, 0);
-    const totalPrice = calculateTotal();
+            const totalItems = Object.values(selectedDishes).reduce((a, b) => a + b, 0);
+            const totalPrice = calculateTotal();
 
-    if (totalItems > 0) {
-        summary.textContent = `${totalItems} item${totalItems > 1 ? 's' : ''} | ₹${totalPrice}`;
-        cart.classList.remove("hidden");
-    } else {
-        cart.classList.add("hidden");
-    }
-}
+            if (totalItems > 0) {
+                summary.textContent = `${totalItems} item${totalItems > 1 ? 's' : ''} | ₹${totalPrice}`;
+                cart.classList.remove("hidden");
+            } else {
+                cart.classList.add("hidden");
+            }
+        }
         // Calculate total price
         function calculateTotal() {
             let total = 0;
@@ -872,17 +828,17 @@ function updateCartUI() {
                 .join("\n");
 
             let orderTotal = calculateTotal();
-            const upiId =  header.upi_id || '';
+            const upiId = header.upi_id || '';
             const upiLink = `upi://pay?pa=${upiId}&am=${orderTotal}&cu=INR`;
-            
+
             const whatsappMessage = `Order Details:\n ${orderSummary} \n \n Total: ₹${orderTotal} \n \n Pay via UPI: ${upiLink}`;
             const whatsappURL = `https://wa.me/${header.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-            
+
             window.open(whatsappURL, "_blank");
         }
 
         // Share location on WhatsApp
-         function sendLocationOnWhatsApp() {
+        function sendLocationOnWhatsApp() {
             const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
             if (!header.whatsappNumber) {
                 alert("WhatsApp number not found. Please try again later.");
@@ -890,21 +846,21 @@ function updateCartUI() {
             }
 
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
                     const locationURL = `https://maps.google.com/?q=${latitude},${longitude}`;
                     const whatsappMessage = `This is my current location: ${locationURL}`;
                     const whatsappURL = `https://wa.me/${header.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-                    
+
                     window.open(whatsappURL, '_blank');
-                }, function(error) {
+                }, function (error) {
                     alert("Unable to retrieve your location. Please enable location access.");
                 });
             } else {
                 alert("Geolocation is not supported by your browser.");
             }
-        } 
+        }
 
         // Filter by category
         function filterByCategory(selectedCategory) {
@@ -924,39 +880,39 @@ function updateCartUI() {
                     section.style.display = sectionTitle === selectedCategory ? 'block' : 'none';
                 }
             });
-             if (selectedCategory === 'all') {
-    // Show all dish divs
-    document.querySelectorAll('.dish').forEach(dishDiv => {
-        dishDiv.style.display = '';
-    });
-    // Set flags based on cart
-    if (Array.isArray(storeData.items)) {
-        storeData.items.forEach(item => {
-            // Compose the dish key as used in selectedDishes
-            const dishKey = `${item.name} - ₹${item.price}`;
-            item.flag = !!selectedDishes[dishKey];
-        });
-    }
-    // Optionally, show the floating cart if there are items
-    updateCartUI();
-}
+            if (selectedCategory === 'all') {
+                // Show all dish divs
+                document.querySelectorAll('.dish').forEach(dishDiv => {
+                    dishDiv.style.display = '';
+                });
+                // Set flags based on cart
+                if (Array.isArray(storeData.items)) {
+                    storeData.items.forEach(item => {
+                        // Compose the dish key as used in selectedDishes
+                        const dishKey = `${item.name} - ₹${item.price}`;
+                        item.flag = !!selectedDishes[dishKey];
+                    });
+                }
+                // Optionally, show the floating cart if there are items
+                updateCartUI();
+            }
 
         }
         //Function for call us button
         function callUs() {
-        const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
-        if (header.contact) {
-        window.location.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
-        } else {
-            alert("Phone number not available.");
+            const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+            if (header.contact) {
+                window.location.href = `tel:${header.contact.toString().replace(/\s+/g, '')}`;
+            } else {
+                alert("Phone number not available.");
+            }
         }
-}
 
         // Handle window resize
-        window.addEventListener("resize", function() {
+        window.addEventListener("resize", function () {
             handleReadMore();
         });
-        
+
     </script>
     <script src="./menu.js"></script>
 </body>

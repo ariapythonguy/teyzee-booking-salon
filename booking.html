@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #000;
+    }
+
+    .product-summary {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 25px;
+      padding: 12px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    input[type="date"],
+    select {
+      width: 98%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="date"]:focus,
+    select:focus {
+      border-color: #000;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .btn {
+        font-size: 1rem;
+        padding: 12px;
+      }
+    }
+    .form-section {
+  margin-bottom: 20px;
+}
+
+.form-section input,
+.form-section textarea {
+  width: 98%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-section input:focus,
+.form-section textarea:focus {
+  border-color: #000;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.btn:disabled {
+  background-color: #ccc;   /* light gray */
+  color: #666;              /* dim text */
+  cursor: not-allowed;      /* cross cursor */
+  opacity: 0.7;             /* faded look */
+}
+
+@media (max-width: 480px) {
+  .form-section input,
+  .form-section textarea {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+  <h1><i class="fas fa-calendar"></i> Book Appointment</h1>
+  <div id="product-summary" class="product-summary">Loading...</div>
+
+  <div class="calendar">
+    <label for="date">Select Date</label>
+    <input type="date" id="date" required>
+  </div>
+
+  <div class="timeslots">
+    <label for="time">Select Time</label>
+    <select id="time" required>
+      <option value="">-- Choose a time --</option>
+    </select>
+  </div>
+
+  <!-- Customer Details Form -->
+  <div class="form-section">
+    <label for="customer-name">Full Name</label>
+    <input type="text" id="customer-name" placeholder="Enter your name" required>
+
+    <label for="customer-email">Email ID</label>
+    <input type="email" id="customer-email" placeholder="Enter your email" required>
+
+    <label for="customer-phone">Phone Number</label>
+    <input type="tel" id="customer-phone" placeholder="Enter your phone number" required>
+
+    <label for="customer-request">Special Requests (Optional)</label>
+    <textarea id="customer-request" placeholder="Any additional info..." rows="3"></textarea>
+  </div>
+
+  <button class="btn" id="confirm-btn" onclick="confirmBooking()" disabled>
+    <i class="fas fa-check-circle"></i> Confirm Booking
+  </button>
+</div>
+  <script src="booking_integration.js"></script>
+<script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
+
+  <script>
+  // Helper to format time nicely
+  function formatTime(hours, minutes) {
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Slugify function (same as product.html/index.html)
+  function slugify(text) {
+    return text.toString().toLowerCase()
+      .replace(/\s+/g, '-')           
+      .replace(/[^\w\-]+/g, '')       
+      .replace(/\-\-+/g, '-')         
+      .replace(/^-+/, '')             
+      .replace(/-+$/, '');            
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get("name");
+  const price = params.get("price");
+  document.getElementById("product-summary").textContent =
+    `Booking for: ${name} - ₹${price}`;
+
+  async function loadTimeSlots() {
+    try {
+      const res = await fetch("store.json");
+      const storeData = await res.json();
+      const product = storeData.items.find(item => item.name === name);
+
+      if (!product) return;
+
+      const startHour = product.starttime || 9;   // fallback 9am
+      const endHour = product.endtime || 17;      // fallback 5pm
+      const duration = product.duration || 30;    // fallback 30 mins
+
+      const select = document.getElementById("time");
+      select.innerHTML = `<option value="">-- Choose a time --</option>`;
+
+      let currentMinutes = startHour * 60;
+      const endMinutes = endHour * 60;
+
+      while (currentMinutes + duration <= endMinutes) {
+        const startH = Math.floor(currentMinutes / 60);
+        const startM = currentMinutes % 60;
+        const endH = Math.floor((currentMinutes + duration) / 60);
+        const endM = (currentMinutes + duration) % 60;
+
+        const slot = `${formatTime(startH, startM)} - ${formatTime(endH, endM)}`;
+        const option = document.createElement("option");
+        option.value = slot;
+        option.textContent = slot;
+        select.appendChild(option);
+
+        currentMinutes += duration;
+      }
+    } catch (err) {
+      console.error("Error loading time slots:", err);
+    }
+  }
+
+ function validateForm() {
+  const nameField = document.getElementById("customer-name").value.trim();
+  const emailField = document.getElementById("customer-email").value.trim();
+  const phoneField = document.getElementById("customer-phone").value.trim();
+  const dateField = document.getElementById("date").value;
+  const timeField = document.getElementById("time").value;
+
+  const confirmBtn = document.getElementById("confirm-btn");
+
+  // Only enable button if every required field is filled
+  if (nameField && emailField && phoneField && dateField && timeField) {
+    confirmBtn.disabled = false;
+  } else {
+    confirmBtn.disabled = true;
+  }
+}
+
+// Attach listeners for all required fields
+["customer-name", "customer-email", "customer-phone", "date", "time"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("input", validateForm);
+    el.addEventListener("change", validateForm); // important for date & select
+  }
+});
+
+// Ensure disabled on first load
+document.addEventListener("DOMContentLoaded", () => {
+  validateForm();
+});
+
+
+function confirmBooking() {
+  const nameVal = document.getElementById("customer-name").value.trim();
+  const emailVal = document.getElementById("customer-email").value.trim();
+  const phoneVal = document.getElementById("customer-phone").value.trim();
+  const requestVal = document.getElementById("customer-request").value.trim();
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+
+  if (!date || !time || !nameVal || !emailVal || !phoneVal) {
+    alert("⚠️ Please fill all required fields before confirming.");
+    return;
+  }
+
+  // Build booking string
+  const bookingString = [
+    `Service: ${name}`,
+    `Price: ₹${price}`,
+    `Date: ${date}`,
+    `Time: ${time}`,
+    `Name: ${nameVal}`,
+    `Email: ${emailVal}`,
+    `Phone: ${phoneVal}`,
+    `Special Requests: ${requestVal || "None"}`
+  ].join(", ");
+
+  // ✅ Request Google token first (keeps popup in user click flow)
+  tokenClient.callback = async (tokenResponse) => {
+    if (tokenResponse.error) {
+      console.error("❌ Token error:", tokenResponse);
+      alert("Could not get Google access token.");
+      return;
+    }
+
+    // Set token so gapi client can use it
+    gapi.client.setToken({ access_token: tokenResponse.access_token });
+
+    // Build Calendar event
+    const [startPart, endPart] = time.split("-").map(t => t.trim());
+    const startDateTime = new Date(`${date} ${startPart}`);
+    const endDateTime = endPart ? new Date(`${date} ${endPart}`) : new Date(startDateTime.getTime() + 60 * 60000);
+
+    const event = {
+      summary: `${name} - ${nameVal}`,
+      description: bookingString,
+      start: { dateTime: startDateTime.toISOString(), timeZone: "Asia/Kolkata" },
+      end: { dateTime: endDateTime.toISOString(), timeZone: "Asia/Kolkata" }
+    };
+
+    try {
+      await gapi.client.calendar.events.insert({
+        calendarId: CALENDAR_ID,
+        resource: event
+      });
+      console.log("✅ Booking added to Google Calendar");
+    } catch (err) {
+      console.error("❌ Error creating event:", err);
+    }
+
+    // 📲 Send WhatsApp after Calendar event
+    // 📲 Send WhatsApp after Calendar event
+try {
+  const res = await fetch("store.json");
+  const storeData = await res.json();
+  const header = Array.isArray(storeData.header) ? storeData.header[0] : {};
+
+  if (header.whatsappNumber) {
+    const upiId = header.upiId || "yourupi@bank";
+    const upiLink = `upi://pay?pa=${upiId}&am=${price}&cu=INR`;
+
+    // Use the existing bookingString and append payment info
+    const msg = encodeURIComponent(
+      `*New Booking Confirmed* ✅\n\n` +
+      bookingString.replace(/, /g, "\n") +
+      `\n\n💳 *Pay Now*: ${upiLink}`
+    );
+
+    window.open(`https://wa.me/${header.whatsappNumber}?text=${msg}`, "_blank");
+  }
+} catch (err) {
+  console.error("❌ WhatsApp error:", err);
+}
+  };
+
+  // 🔑 Must be the FIRST async action inside the click
+  tokenClient.requestAccessToken({ prompt: "consent" });
+}
+
+
+ 
+
+  document.addEventListener("DOMContentLoaded", loadTimeSlots);
+  
+</script>
+</body>
+</html>

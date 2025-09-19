@@ -403,11 +403,11 @@
                         ${product.add_text ? `<p class="add-text">${product.add_text}</p>` : ''}
     
                         <div class="action-buttons">
-                            <button class="action-button whatsapp" onclick="shareOnWhatsApp('${product.name}', ${product.price}, '${headerData.whatsappNumber || ''}')">
-                                <i class="fab fa-whatsapp"></i> Order on WhatsApp
+                            <button class="action-button whatsapp">
+                                <a href="booking.html?name=${encodeURIComponent(product.name)}&price=${product.price}" style="text-decoration: none; color:white;"><i class="fab fa-whatsapp"></i> Order on WhatsApp</a>
                             </button>
-                            <button class="action-button upi" onclick="payViaUPI(${product.price}, '${headerData.upi_id || ''}')">
-                                <i class="fas fa-money-bill-wave"></i> Pay via UPI
+                            <button class="action-button upi" >
+                                 <a href="booking.html?name=${encodeURIComponent(product.name)}&price=${product.price}" style="text-decoration: none; color:white;"><i class="fas fa-money-bill-wave"></i> Pay via UPI</a>
                             </button>
                         </div>
                         <a href="index.html" class="back-button">Back to Menu</a>
@@ -474,15 +474,15 @@
             }
         }
 
-        function shareOnWhatsApp(productName, productPrice, whatsappNumber) {//Added a new argument whatsappNumber
-            if (!whatsappNumber) {
-                alert("WhatsApp number not found. Please try again later.");
-                return;
-            }
-            const message = `I would like to order: ${productName} - ₹${productPrice}`;
-            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, "_blank");
-        }
+        // function shareOnWhatsApp(productName, productPrice, whatsappNumber) {//Added a new argument whatsappNumber
+        //     if (!whatsappNumber) {
+        //         alert("WhatsApp number not found. Please try again later.");
+        //         return;
+        //     }
+        //     const message = `I would like to order: ${productName} - ₹${productPrice}`;
+        //     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        //     window.open(whatsappURL, "_blank");
+        // }
 
         function payViaUPI(amount, upiId) { //Added a new argument upiId
             if (!upiId) {
