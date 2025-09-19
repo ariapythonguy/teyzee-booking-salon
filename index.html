@@ -487,7 +487,6 @@
             <div id="floating-cart" class="floating-cart hidden">
                 <div class="cart-content">
                     <span id="cart-summary">0 items | ₹0</span>
-                    <button class="checkout-btn" onclick="showOnlyFlaggedDishes()">View Cart</button>
                 </div>
             </div>
 
@@ -495,11 +494,6 @@
                 <!-- <button class="footer-btn" onclick="shareOnWhatsApp()" aria-label="Send Order on WhatsApp">
                     <i class="fab fa-whatsapp"></i> Send Order
                 </button> -->
-                <button class="footer-btn" aria-label="Send Order on WhatsApp">
-                    <a style="color: #000000; text-decoration: none;" href="salon_booking.html"><i
-                            class="fab fa-whatsapp"></i> Send Order</a>
-
-                </button>
                 <!--                 <button class="footer-btn" onclick="sendLocationOnWhatsApp()" aria-label="Share Location">
                     <i class="fas fa-map-marker-alt"></i> Send Location
                 </button> -->
@@ -632,48 +626,47 @@
         }
 
         // Render individual dish item
-        function renderDishItem(dish) {
-            const isonsale = dish.onsale === true;
-            const stars = generateStars(dish.rating || 0);
-            const currentHour = new Date().getHours();
-            const isAvailable = currentHour >= (dish.startTime || 0) && currentHour < (dish.endTime || 24);
+            function renderDishItem(dish) {
+                const isonsale = dish.onsale === true;
+                const stars = generateStars(dish.rating || 0);
+                const currentHour = new Date().getHours();
+                const isAvailable = currentHour >= (dish.startTime || 0) && currentHour < (dish.endTime || 24);
 
-            let shortDesc = dish.description && dish.description.length > 50 ?
-                dish.description.substring(0, 50) + "..." : dish.description || "";
-            let fullDesc = dish.description || "";
+                let shortDesc = dish.description && dish.description.length > 50 ?
+                    dish.description.substring(0, 50) + "..." : dish.description || "";
+                let fullDesc = dish.description || "";
 
-            return `
-        <div class="dish">
-            <div class="dish-content">
-                <div class="dish-details">
-                    <h3 class="dish-name">
-                        <a href="product.html?id=${dish.id}">${dish.name || 'Unknown Dish'}</a>
-                    </h3>
-                    <div class="dish-pricing">
-                        <span class="dish-price">₹${dish.price || 0}</span>
-                        ${dish.price ? `<span class="original-price">₹${Math.floor(dish.price * (1 + ((typeof dish.offer === 'number' && dish.offer >= 1 && dish.offer <= 99 ? dish.offer : 1) / 100)))}</span>` : ''}
-                        <span class="offer">${dish.offer}% OFF</span>
+                return `
+            <div class="dish">
+                <div class="dish-content">
+                    <div class="dish-details">
+                        <h3 class="dish-name">
+                            <a href="product.html?id=${dish.id}">${dish.name || 'Unknown Dish'}</a>
+                        </h3>
+                        <div class="dish-pricing">
+                            <span class="dish-price">₹${dish.price || 0}</span>
+                            ${dish.price ? `<span class="original-price">₹${Math.floor(dish.price * (1 + ((typeof dish.offer === 'number' && dish.offer >= 1 && dish.offer <= 99 ? dish.offer : 1) / 100)))}</span>` : ''}
+                            <span class="offer">${dish.offer}% OFF</span>
+                        </div>
+                        ${stars ? `<div class="dish-rating">${stars} (${dish.rating})</div>` : ''}
+                        <p class="dish-description" 
+                            data-full="${fullDesc}" 
+                            data-short="${shortDesc}">
+                            ${window.innerWidth < 480 && fullDesc.length > 50 ?
+                        shortDesc + ' <span class="read-more">Read More</span>' : fullDesc}
+                        </p>
+                        ${dish.subcategory ? `<div class="dish-subcategory">${dish.subcategory}</div>` : ''}
                     </div>
-                    ${stars ? `<div class="dish-rating">${stars} (${dish.rating})</div>` : ''}
-                    <p class="dish-description" 
-                        data-full="${fullDesc}" 
-                        data-short="${shortDesc}">
-                        ${window.innerWidth < 480 && fullDesc.length > 50 ?
-                    shortDesc + ' <span class="read-more">Read More</span>' : fullDesc}
-                    </p>
-                    ${dish.subcategory ? `<div class="dish-subcategory">${dish.subcategory}</div>` : ''}
+                    ${dish["image-1"] ? `<img class="dish-image lazy-img" data-src="${dish["image-1"]}" alt="${dish.name}">` : ''}
                 </div>
-                ${dish["image-1"] ? `<img class="dish-image lazy-img" data-src="${dish["image-1"]}" alt="${dish.name}">` : ''}
+                <div class="dish-footer">
+                    <button class="order-btn" disabled>Click on Link</button>
+                   
+                </div>
             </div>
-            <div class="dish-footer">
-                ${(typeof dish.dyn_inv === "number" && dish.dyn_inv < 1)
-                    ? `<button class="order-btn" disabled>Available Soon</button>`
-                    : `<button class="order-btn" onclick="selectDish('${dish.name} - ₹${dish.price}', this)" ${isAvailable ? '' : 'disabled'}>${isAvailable ? 'Add to Order' : 'Unavailable'}</button>`
-                }
-            </div>
-        </div>
-    `;
-        }
+        `;
+            }
+
 
         // Generate star rating HTML
         function generateStars(rating) {
@@ -784,7 +777,7 @@
         }
 
 
-        
+
 
         //Floating Cart
         function updateCartUI() {
