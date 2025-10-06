@@ -212,7 +212,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .order-btn {
@@ -372,6 +372,10 @@
             .footer-btn {
                 width: 100%;
                 max-width: 200px;
+            }
+            .dish-footer {
+                display: flex;
+                justify-content: center;
             }
         }
 
@@ -660,7 +664,7 @@
                     ${dish["image-1"] ? `<img class="dish-image lazy-img" data-src="${dish["image-1"]}" alt="${dish.name}">` : ''}
                 </div>
                 <div class="dish-footer">
-                    <button class="order-btn" disabled>Click on Link</button>
+                    <button class="order-btn"><a style="text-decoration:none; color: white;" href="product.html?id=${dish.id}">Book Now</a></button>
                    
                 </div>
             </div>
